@@ -41,20 +41,52 @@ public class LibreHub {
 
         createDataFileIfMissing();
 
-        int choice = 0;
+    while (true) {
+        System.out.println("\n===== LIBREHUB LOGIN =====");
+        System.out.println("1. Administrator");
+        System.out.println("2. Librarian / Staff");
+        System.out.println("3. Student");
+        System.out.println("4. Exit");
+        System.out.print("Select role: ");
 
+        if (!input.hasNextInt()) {
+            input.nextLine();
+            System.out.println("Invalid input!");
+            continue;
+        }
+
+        int role = input.nextInt();
+        input.nextLine();
+
+        if (role == 4) {  
+        System.out.println("\nThank you for using LibreHub!");
+        break;
+        }
+
+        if (role < 1 || role > 3) continue;
+
+        int choice = -1;
         do {
-            System.out.println("\nLIBRARY BOOK SYSTEM");
+            System.out.println("\n===== LIBREHUB DASHBOARD =====");
+            System.out.println("Role: " +
+                (role == 1 ? "Administrator" :
+                 role == 2 ? "Librarian" : "Student"));
+
             System.out.println("1. View All Books");
-            System.out.println("2. Search Book");
+            System.out.println("2. Search Books");
             System.out.println("3. View Total Books");
-            System.out.println("4. Circulation (Borrow / Return)");
-            System.out.println("5. Exit");
+            System.out.println("4. Borrow / Return");
+
+            if (role == 1) {
+                System.out.println("4. User & Role Management");
+            }
+
+            System.out.println("0. Logout");
             System.out.print("Enter choice: ");
 
             if (!input.hasNextInt()) {
-                System.out.println("Invalid input!");
                 input.nextLine();
+                System.out.println("Invalid input!");
                 continue;
             }
 
@@ -64,15 +96,24 @@ public class LibreHub {
             switch (choice) {
                 case 1 -> viewAllBooks();
                 case 2 -> searchBooks(input);
-                case 3 -> System.out.println("Total Books: " + countBooks());
-                case 4 -> circulationMenu(input);
-                case 5 -> System.out.println("Thank you for using the system!");
+                case 3 -> System.out.println("\nTotal Books: " + countBooks());
+                case 4 -> circulationMenu(input); 
+                case 5 -> {
+                    if (role == 1) {
+                        System.out.println("User & Role Management");
+                        System.out.println("User role selection is currently a demo.");
+                    } else {
+                        System.out.println("Invalid choice!");
+                    }
+                }
+                case 0 -> System.out.println("\nLogging out...");
                 default -> System.out.println("Invalid choice!");
             }
 
-        } while (choice != 5);
+        } while (choice != 0);
+        System.out.println("Thank you for using LibreHub!");
 
-        input.close();
+    }
     }
 
     // FILE HANDLING
