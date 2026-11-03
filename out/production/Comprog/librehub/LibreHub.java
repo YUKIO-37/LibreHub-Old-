@@ -1,22 +1,11 @@
-/*
- * LibreHub | Library Book System
- * Developed by: Group 1
- * Pacada
- * Fiel
- * Bolo
- * Pantaleon
- * Corpus
- */
 
-
-package librehub;
-
+package draft_finals;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
-public class LibreHub {
 
+public class Draft_finals {
     // File where the book database is stored (created in the folder the program runs from)
     private static final String DATA_FILE = "books.txt";
 
@@ -33,11 +22,9 @@ public class LibreHub {
         }
     }
 
-    public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
 
-        // BOOK DATABASE
-        // Author: Fiel & Bolo
+    public static void main(String[] args) {
+    Scanner input = new Scanner(System.in);
 
         createDataFileIfMissing();
 
@@ -77,8 +64,8 @@ public class LibreHub {
             System.out.println("3. View Total Books");
             System.out.println("4. Borrow / Return");
 
-            if (role == 1) {
-                System.out.println("4. User & Role Management");
+        if (role == 1) {
+               System.out.println("5. User & Role Management");
             }
 
             System.out.println("0. Logout");
@@ -97,7 +84,7 @@ public class LibreHub {
                 case 1 -> viewAllBooks();
                 case 2 -> searchBooks(input);
                 case 3 -> System.out.println("\nTotal Books: " + countBooks());
-                case 4 -> circulationMenu(input); 
+                case 4 -> circulationMenu(input, role);
                 case 5 -> {
                     if (role == 1) {
                         System.out.println("User & Role Management");
@@ -115,20 +102,7 @@ public class LibreHub {
 
     }
     }
-
-    // FILE HANDLING
-    // Author: Fiel, Pacada, & Bolo
-
-    /*
-     * The book database lives just in the DATA_FILE. Each line is just one book:
-     *     title|category|year|borrower
-     * The borrower field is empty when the book is available
-     * Every operation reads or rewrites the file directly
-     */
-
-    // Creates DATA_FILE with the starting catalog if it does not exist yet.
-
-
+    
     private static void createDataFileIfMissing() {
         File file = new File(DATA_FILE);
         if (file.exists()) {
@@ -372,36 +346,49 @@ public class LibreHub {
     // CIRCULATION (borrow / return)
     // Author: Bolo
 
-    private static void circulationMenu(Scanner input) {
-        int choice = 0;
+    private static void circulationMenu(Scanner input, int role) {
+          int choice = -1;
 
-        do {
-            System.out.println("\n=== DIGILIB: CIRCULATION ===");
-            System.out.println("[1] Borrow Book");
-            System.out.println("[2] Return Book");
+    do {
+        System.out.println("\n=== LIBREHUB: CIRCULATION ===");
+        System.out.println("[1] Borrow Book");
+        System.out.println("[2] Return Book");
+
+        // Only Administrator and Librarian can view records
+        if (role != 3) {
             System.out.println("[3] View Records");
-            System.out.println("[4] Back to Main Menu");
-            System.out.print("Choice: ");
+        }
 
-            if (!input.hasNextInt()) {
-                System.out.println("Invalid input!");
-                input.nextLine();
-                continue;
-            }
+        System.out.println("[4] Back to Main Menu");
+        System.out.print("Choice: ");
 
-            choice = input.nextInt();
+        if (!input.hasNextInt()) {
+            System.out.println("Invalid input!");
             input.nextLine();
+            continue;
+        }
 
-            switch (choice) {
-                case 1 -> borrowBook(input);
-                case 2 -> returnBook(input);
-                case 3 -> viewBorrowingRecords();
-                case 4 -> System.out.println("Returning to main menu...");
-                default -> System.out.println("Invalid choice!");
+        choice = input.nextInt();
+        input.nextLine();
+
+        switch (choice) {
+            case 1 -> borrowBook(input);
+            case 2 -> returnBook(input);
+
+            case 3 -> {
+                if (role != 3) {
+                    viewBorrowingRecords();
+                } else {
+                    System.out.println("Invalid choice!");
+                }
             }
 
-        } while (choice != 4);
-    }
+            case 4 -> System.out.println("Returning to main menu...");
+            default -> System.out.println("Invalid choice!");
+        }
+
+    } while (choice != 4);
+}
 
     private static void borrowBook(Scanner input) {
         printBookStatus();
@@ -521,6 +508,6 @@ public class LibreHub {
 
     private static void printRow(int number, Book book) {
         System.out.printf("%-5d %-25s %-15s %-10d%n",
-                number, book.title, book.category, book.year);
-    }
+                number, book.title, book.category, book.year); 
+    }     
 }
